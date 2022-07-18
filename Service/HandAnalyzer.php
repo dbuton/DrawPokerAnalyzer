@@ -10,6 +10,7 @@ use App\Entity\Result;
 
 class HandAnalyzer
 {
+    /** @var Card[] $hand  */
     private array $hand = [];
     private array $orderedValueHand = [];
     private array $orderedSuitHand = [];
@@ -68,7 +69,6 @@ class HandAnalyzer
 
     private function hasStraightFlush() : ?Result
     {
-        $flushResult = $this->hasFlush();
         $straightResult = $this->hasStraight();
 
         if ($this->hasFlush() !== null && $this->hasStraight() !== null) {
@@ -142,12 +142,30 @@ class HandAnalyzer
         }
 
         $previousCardValue = null;
+        $hasAs = false;
+        $hasFive = false;
 
         foreach ($this->orderedValueHand as $key => $cardsValue) {
-            if ($previousCardValue !== null && ($key * 2) !== $previousCardValue) {
+            if ($previousCardValue !== null &&
+                $previousCardValue !== 8192 &&
+                $key !== 8192 &&
+                ($key * 2) !== $previousCardValue || ($key === 2 && $hasAs === false))
+            {
                 return null;
             }
             $previousCardValue = $key;
+            $hasAs   = ($hasAs || $key === 8192);
+            $hasFive = ($hasFive || $key === 16);
+        }
+
+        if ($hasFive === true && $hasAs === true) {
+            foreach ($this->hand as $key => $card) {
+                if ($card->getValue() === "A") {
+                    $this->hand[] = new Card('1', $card->getSuit());
+                    unset($this->hand[$key]);
+                    $this->orderedValueHand = $this->orderByValue($this->hand);
+                }
+            }
         }
 
         return new Result(

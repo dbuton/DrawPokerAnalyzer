@@ -34,6 +34,7 @@ class HandAnalyzerTest
         $this->threeOfKindTest();
         $this->straightTest();
         $this->flushTest();
+        $this->fullHouseTest();
         $this->fourOfKindTest();
         $this->straightFlushTest();
     }
@@ -101,10 +102,22 @@ class HandAnalyzerTest
     public function straightTest()
     {
         $hand = [
-            new Card('6', 'C'),
-            new Card('7', 'D'),
-            new Card('8', 'S'),
-            new Card('9', 'D'),
+            new Card('A', 'C'),
+            new Card('2', 'D'),
+            new Card('3', 'S'),
+            new Card('4', 'D'),
+            new Card('5', 'C'),
+        ];
+
+        $result = $this->gameManager->analyzeHand($hand, 'Straight Test');
+        $this->gameManager->displayCards($hand);
+        $this->gameManager->displayHandResult($result);
+
+        $hand = [
+            new Card('A', 'C'),
+            new Card('K', 'D'),
+            new Card('Q', 'S'),
+            new Card('J', 'D'),
             new Card('T', 'C'),
         ];
 
