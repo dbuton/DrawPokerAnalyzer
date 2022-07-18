@@ -28,40 +28,40 @@ class HandAnalyzer
 
     public function analyse() : ?Result
     {
-        if ($this->hasStraightFlush()) {
-            return $this->hasStraightFlush();
+        if ($result = $this->hasStraightFlush()) {
+            return $result;
         }
 
-        if ($this->hasFourOfKind()) {
-            return $this->hasFourOfKind();
+        if ($result = $this->hasFourOfKind()) {
+            return $result;
         }
 
-        if ($this->hasFullHouse()) {
-            return $this->hasFullHouse();
+        if ($result = $this->hasFullHouse()) {
+            return $result;
         }
 
-        if ($this->hasFlush()) {
-            return $this->hasFlush();
+        if ($result = $this->hasFlush()) {
+            return $result;
         }
 
-        if ($this->hasStraight()) {
-            return $this->hasStraight();
+        if ($result = $this->hasStraight()) {
+            return $result;
         }
 
-        if ($this->hasThreeOfKind()) {
-            return $this->hasThreeOfKind();
+        if ($result = $this->hasThreeOfKind()) {
+            return $result;
         }
 
-        if ($this->hasTwoPair()) {
-            return $this->hasTwoPair();
+        if ($result = $this->hasTwoPair()) {
+            return $result;
         }
 
-        if ($this->hasPair()) {
-            return $this->hasPair();
+        if ($result = $this->hasPair()) {
+            return $result;
         }
 
-        if ($this->hasHighCard()) {
-            return $this->hasHighCard();
+        if ($result = $this->hasHighCard()) {
+            return $result;
         }
 
         return null;
@@ -69,9 +69,9 @@ class HandAnalyzer
 
     private function hasStraightFlush() : ?Result
     {
-        $straightResult = $this->hasStraight();
+        $straightResult = $this->hasStraight(true);
 
-        if ($this->hasFlush() !== null && $this->hasStraight() !== null) {
+        if ($this->hasFlush() !== null && $straightResult !== null) {
             return new Result(
                 $this->playerName,
                 $this->hand,
@@ -135,7 +135,7 @@ class HandAnalyzer
         return null;
     }
 
-    private function hasStraight() : ?Result
+    private function hasStraight($forStraightFlush = false) : ?Result
     {
         if (count($this->orderedValueHand) < 5) {
             return null;
@@ -158,7 +158,7 @@ class HandAnalyzer
             $hasFive = ($hasFive || $key === 16);
         }
 
-        if ($hasFive === true && $hasAs === true) {
+        if ($hasFive === true && $hasAs === true && $forStraightFlush === false) {
             foreach ($this->hand as $key => $card) {
                 if ($card->getValue() === "A") {
                     $this->hand[] = new Card('1', $card->getSuit());
