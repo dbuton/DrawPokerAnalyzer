@@ -25,7 +25,7 @@ class GameManager
         $blackHandResult = $this->analyzeHand($game->getBlackHand(), 'Black');
         $whiteHandResult = $this->analyzeHand($game->getWhiteHand(), 'White');
 
-        $this->displayResult($blackHandResult, $whiteHandResult);
+        $this->displayGameResult($blackHandResult, $whiteHandResult);
         $winner = $this->checkWinner($blackHandResult, $whiteHandResult);
 
         $this->displayWinner($winner);
@@ -60,29 +60,32 @@ class GameManager
     {
         echo 'Black Player : ';
         $this->displayCards($game->getBlackHand());
-        echo ("\n");
         echo 'White Player : ';
         $this->displayCards($game->getWhiteHand());
         echo ("\n");
-        echo ("\n");
     }
 
-    private function displayResult(Result $blackHandResult, Result $whiteHandResult) : void
+    private function displayGameResult(Result $blackHandResult, Result $whiteHandResult) : void
     {
-        echo 'Black Player : ' . $blackHandResult->getRank() . ' with ' . $blackHandResult->getDescription();
-        echo ("\n");
-        echo 'White Player : ' . $whiteHandResult->getRank() . ' with ' . $whiteHandResult->getDescription();
+        $this->displayHandResult($blackHandResult);
+        $this->displayHandResult($whiteHandResult);
+    }
+
+    public function displayHandResult(Result $handResult) : void
+    {
+        echo $handResult->getPlayerName() . ' Player : ' . $handResult->getRank() . ' with ' . $handResult->getDescription();
         echo ("\n");
     }
 
     /**
      * @param Card[] $cards
      */
-    private function displayCards(array $cards) : void
+    public function displayCards(array $cards) : void
     {
         foreach ($cards as $card) {
             echo $card->getValue() . $card->getSuit() . ' ';
         }
+        echo ("\n");
     }
 
     private function displayWinner(?Result $winner) : void
